@@ -1,13 +1,13 @@
 # pocketRDF
 
-A lightweight RDF toolkit for Python, providing command-line utilities for loading, validating, querying, and serializing RDF data.
+A lightweight RDF toolkit for Python, providing command-line utilities for loading, serializing, querying, and validating RDF data.
 
 ## Features
 
 - **Load RDF Data**: Support for multiple RDF formats (Turtle, RDF/XML, JSON-LD, etc.)
-- **SHACL Validation**: Validate RDF data against SHACL shapes
-- **SPARQL Querying**: Execute SPARQL queries on RDF graphs
 - **Serialization**: Export query results in various formats
+- **SPARQL Querying**: Execute SPARQL queries on RDF graphs
+- **SHACL Validation**: Validate RDF data against SHACL shapes
 - **CLI Interface**: Easy-to-use command-line tools built with Typer
 
 ## Installation
@@ -21,7 +21,7 @@ A lightweight RDF toolkit for Python, providing command-line utilities for loadi
 Clone the repository and install:
 
 ```bash
-git clone https://github.com/yourname/pocket-rdf.git
+git clone https://github.com/EHegyi-Sphericity/pocket-rdf.git
 cd pocket-rdf
 pip install .
 ```
@@ -34,7 +34,42 @@ pip install .
 
 ## Usage
 
-pocketRDF provides three main commands: `validate`, `query`, and `serialize`.
+pocketRDF provides three main commands: `serialize`, `query`, and `validate`.
+
+### Serialize RDF Data
+
+Load and serialize RDF data to different formats.
+
+```bash
+pocket-rdf serialize data.ttl --out output.xml
+```
+
+Arguments:
+
+- Input RDF files (supports patterns like `*.xml`)
+
+Options:
+
+- `--out`, `-o`: Output file (format inferred from extension)
+- `--dataset`, `-d`: Use dataset for input RDF files
+
+### Query RDF Data
+
+Execute SPARQL queries on RDF files.
+
+```bash
+pocket-rdf query data.ttl --query query.sparql --out results.json
+```
+
+Arguments:
+
+- Input RDF files (supports patterns like `*.xml`)
+
+Options:
+
+- `--query`, `-q`: SPARQL query file
+- `--out`, `-o`: Output file for results
+- `--dataset`, `-d`: Use dataset for input RDF files
 
 ### Validate RDF Data
 
@@ -54,43 +89,24 @@ Options:
 - `--out`, `-o`: Output file for validation report
 - `--dataset`, `-d`: Use dataset for input RDF files
 
-### Query RDF Data
-
-Execute SPARQL queries on RDF files.
-
-```bash
-pocket-rdf query --data data.ttl --query query.sparql --out results.json
-```
-
-Arguments:
-
-- Input RDF files (supports patterns like `*.xml`)
-
-Options:
-
-- `--query`, `-q`: SPARQL query file
-- `--out`, `-o`: Output file for results
-- `--dataset`, `-d`: Use dataset for input RDF files
-
-### Serialize RDF Data
-
-Load and serialize RDF data to different formats.
-
-```bash
-pocket-rdf serialize --data data.ttl --out output.xml
-```
-
-Arguments:
-
-- Input RDF files (supports patterns like `*.xml`)
-
-Options:
-
-- `--data`, `-d`: Input RDF files
-- `--out`, `-o`: Output file (format inferred from extension)
-- `--dataset`, `-d`: Use dataset for input RDF files
-
 ## Examples
+
+### Serializing to Different Formats
+
+```bash
+pocket-rdf serialize \
+  input.ttl \
+  --out output.jsonld
+```
+
+### Querying RDF Data
+
+```bash
+pocket-rdf query \
+  data.ttl \
+  --query count_subjects.sparql \
+  --out query_results.txt
+```
 
 ### Validating CGMES Data
 
@@ -102,23 +118,6 @@ pocket-rdf validate \
   --dataset
 ```
 
-### Querying RDF Data
-
-```bash
-pocket-rdf query \
-  --data data.ttl \
-  --query count_subjects.sparql \
-  --out query_results.txt
-```
-
-### Serializing to Different Formats
-
-```bash
-pocket-rdf serialize \
-  --data input.ttl \
-  --out output.jsonld
-```
-
 ## Development
 
 ### Running Tests
@@ -126,10 +125,6 @@ pocket-rdf serialize \
 ```bash
 python -m pytest tests/
 ```
-
-### Building Documentation
-
-(If applicable)
 
 ## Contributing
 
@@ -143,4 +138,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 Emil Hegyi - EHegyi@sphericity.eu
 
-Project Link: https://github.com/yourname/pocket-rdf
+Project Link: https://github.com/EHegyi-Sphericity/pocket-rdf
