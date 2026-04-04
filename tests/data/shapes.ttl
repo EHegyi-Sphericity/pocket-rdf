@@ -1,0 +1,9 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+ex:Shape a sh:NodeShape ;
+    sh:targetClass ex:Class ;
+    sh:property [
+        sh:path ex:predicate ;
+        sh:minCount 1 ;
+    ] .

@@ -1,0 +1,13 @@
+
+__pycache__/
+*.pyc
+env/
+.venv/
+dist/
+build/
+.idea/
+.vscode/
+.coverage
+*.egg-info/
+.output/
+node_modules/

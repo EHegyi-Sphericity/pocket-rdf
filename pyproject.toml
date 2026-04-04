@@ -1,0 +1,65 @@
+[project]
+name = "pocket-rdf"
+version = "0.1.0"
+description = "A lightweight RDF toolkit for Python"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [ { name = "Emil Hegyi", email = "EHegyi@sphericity.eu" } ]
+keywords = [ "rdf", "sparql", "shacl", "semantic-web", "linked-data", "python", "cim", "cgmes", "power-system-modeling", "serialization", "querying", "validation" ]
+dependencies = [
+  "rdflib>=7.6.0",
+  "pyshacl>=0.31.0",
+  "typer>=0.24.1"
+]
+classifiers = [
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Operating System :: OS Independent"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.1.1",
+  "pytest-cov==4.1.0",
+  "pre-commit==3.7.0",
+  "pre-commit-hooks==4.0.1",
+  "black==26.3.1",
+  "isort==8.0.1",
+  "flake8==7.3.0",
+  "flake8-pyproject==1.2.4",
+  "pyright==1.1.408"
+]
+
+[project.urls]
+Repository = "https://github.com/yourname/pocket-rdf"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project.scripts]
+pocket-rdf = "pocket_rdf.cli:main"
+
+[tool.black]
+line-length = 88
+target-version = ["py310", "py311", "py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 88
+
+[tool.flake8]
+max-line-length = 88
+extend-ignore = [
+    "E203",  # whitespace before ':', conflicts with Black
+    "W503",  # line break before binary operator, conflicts with Black
+]
+
+[tool.pyright]
+strict = true
+pythonVersion = "3.12"
+typeCheckingMode = "standard"
+include = ["src"]
+exclude = ["**/node_modules", "**/__pycache__", "**/.venv", "**/.*", "tests/**", "**/build/**"]
