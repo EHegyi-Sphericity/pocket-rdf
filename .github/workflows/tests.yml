@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  test:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,12 +16,35 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt || true
-          pip install pytest ruff
+        run: pip install .[dev]
 
-      - name: Run Ruff
-        run: ruff check .
+      - name: Check formatting (Black)
+        run: black --check src/ tests/
+
+      - name: Check import order (isort)
+        run: isort --check-only src/ tests/
+
+      - name: Lint (flake8)
+        run: flake8 src/ tests/
+
+      - name: Type check (pyright)
+        run: pyright
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: pip install .[dev]
 
       - name: Run tests
-        run: pytest
+        run: pytest --cov=pocket_rdf --cov-report=term-missing
