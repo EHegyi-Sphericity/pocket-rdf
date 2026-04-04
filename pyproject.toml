@@ -33,7 +33,7 @@ dev = [
 ]
 
 [project.urls]
-Repository = "https://github.com/yourname/pocket-rdf"
+Repository = "https://github.com/EHegyi-Sphericity/pocket-rdf"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]

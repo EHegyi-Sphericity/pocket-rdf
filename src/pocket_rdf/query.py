@@ -93,6 +93,6 @@ def serialize_results(results: Result, outfile: Path):
             )
     except Exception as error:
         raise ValueError(
-            f"Failed to serialize SPARQL query results to {outfile}"
+            f"Failed to serialize SPARQL query results to {outfile} "
             f"with error:\n {error}"
         )
