@@ -1,0 +1,27 @@
+@prefix ex:   <http://example.org/library/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Catalog A: Fantasy books
+
+ex:author-tolkien  a  ex:Author ;
+    ex:name        "J.R.R. Tolkien" ;
+    ex:birthYear   1892 .
+
+ex:genre-fantasy   a  ex:Genre ;
+    ex:label       "Fantasy" .
+
+ex:book-lotr       a  ex:Book ;
+    ex:title       "The Lord of the Rings" ;
+    ex:author      ex:author-tolkien ;
+    ex:genre       ex:genre-fantasy ;
+    ex:published   1954 ;
+    ex:pages       1178 .
+
+ex:book-hobbit     a  ex:Book ;
+    ex:title       "The Hobbit" ;
+    ex:author      ex:author-tolkien ;
+    ex:genre       ex:genre-fantasy ;
+    ex:published   1937 ;
+    ex:pages       310 .

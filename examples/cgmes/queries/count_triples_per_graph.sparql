@@ -1,0 +1,11 @@
+# Count triples per named graph.
+# Each CGMES XML file becomes its own named graph when loaded with --dataset.
+
+SELECT ?graph (COUNT(*) AS ?tripleCount)
+WHERE {
+    GRAPH ?graph {
+        ?s ?p ?o .
+    }
+}
+GROUP BY ?graph
+ORDER BY DESC(?tripleCount)

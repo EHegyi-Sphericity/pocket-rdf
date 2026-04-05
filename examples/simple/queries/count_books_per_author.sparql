@@ -1,0 +1,12 @@
+# Count how many books each author has written.
+
+PREFIX ex: <http://example.org/library/>
+
+SELECT ?authorName (COUNT(?book) AS ?bookCount)
+WHERE {
+    ?book   a         ex:Book ;
+            ex:author ?author .
+    ?author ex:name   ?authorName .
+}
+GROUP BY ?authorName
+ORDER BY DESC(?bookCount)

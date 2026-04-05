@@ -1,0 +1,14 @@
+# List all books together with the named graph they came from.
+
+PREFIX ex: <http://example.org/library/>
+
+SELECT ?graph ?title ?authorName
+WHERE {
+    GRAPH ?graph {
+        ?book  a         ex:Book ;
+               ex:title  ?title ;
+               ex:author ?author .
+        ?author ex:name  ?authorName .
+    }
+}
+ORDER BY ?graph ?title

@@ -1,0 +1,14 @@
+# List all books with their author name and genre label.
+
+PREFIX ex: <http://example.org/library/>
+
+SELECT ?title ?authorName ?genreLabel
+WHERE {
+    ?book  a           ex:Book ;
+           ex:title    ?title ;
+           ex:author   ?author ;
+           ex:genre    ?genre .
+    ?author ex:name    ?authorName .
+    ?genre  ex:label   ?genreLabel .
+}
+ORDER BY ?title

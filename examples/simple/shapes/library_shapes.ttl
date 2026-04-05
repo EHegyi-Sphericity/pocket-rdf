@@ -1,0 +1,39 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix ex:   <http://example.org/library/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# ---------- Book shape ----------
+
+ex:BookShape  a  sh:NodeShape ;
+    sh:targetClass  ex:Book ;
+    sh:property [
+        sh:path      ex:title ;
+        sh:minCount  1 ;
+        sh:maxCount  1 ;
+        sh:datatype  xsd:string ;
+        sh:message   "A Book must have exactly one title (xsd:string)." ;
+    ] ;
+    sh:property [
+        sh:path      ex:author ;
+        sh:minCount  1 ;
+        sh:class     ex:Author ;
+        sh:message   "A Book must reference at least one Author." ;
+    ] ;
+    sh:property [
+        sh:path      ex:genre ;
+        sh:minCount  1 ;
+        sh:class     ex:Genre ;
+        sh:message   "A Book must reference at least one Genre." ;
+    ] .
+
+# ---------- Author shape ----------
+
+ex:AuthorShape  a  sh:NodeShape ;
+    sh:targetClass  ex:Author ;
+    sh:property [
+        sh:path      ex:name ;
+        sh:minCount  1 ;
+        sh:maxCount  1 ;
+        sh:datatype  xsd:string ;
+        sh:message   "An Author must have exactly one name (xsd:string)." ;
+    ] .

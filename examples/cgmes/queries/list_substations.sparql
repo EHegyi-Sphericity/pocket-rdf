@@ -1,0 +1,15 @@
+# List all Substations with their name and region.
+
+PREFIX cim: <http://iec.ch/TC57/2013/CIM-schema-cim16#>
+
+SELECT ?substation ?name ?region
+WHERE {
+    GRAPH ?g {
+        ?substation a cim:Substation ;
+            cim:IdentifiedObject.name ?name .
+        OPTIONAL {
+            ?substation cim:Substation.Region ?region .
+        }
+    }
+}
+ORDER BY ?name

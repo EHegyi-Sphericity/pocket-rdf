@@ -1,0 +1,14 @@
+# List all ACLineSegments with their length and resistance.
+
+PREFIX cim: <http://iec.ch/TC57/2013/CIM-schema-cim16#>
+
+SELECT ?line ?name ?length ?r
+WHERE {
+    GRAPH ?g {
+        ?line a cim:ACLineSegment ;
+            cim:IdentifiedObject.name ?name .
+        OPTIONAL { ?line cim:Conductor.length ?length . }
+        OPTIONAL { ?line cim:ACLineSegment.r ?r . }
+    }
+}
+ORDER BY ?name

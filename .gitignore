@@ -11,3 +11,7 @@ build/
 *.egg-info/
 .output/
 node_modules/
+examples/*/output/*
+!examples/*/output/.gitkeep
+examples/cgmes/models/*
+!examples/cgmes/models/.gitkeep

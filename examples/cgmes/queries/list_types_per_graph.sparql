@@ -1,0 +1,11 @@
+# List all RDF types and count instances per named graph.
+# Useful for verifying that a CGMES dataset contains the expected profiles.
+
+SELECT ?graph ?type (COUNT(?instance) AS ?count)
+WHERE {
+    GRAPH ?graph {
+        ?instance a ?type .
+    }
+}
+GROUP BY ?graph ?type
+ORDER BY ?graph ?type

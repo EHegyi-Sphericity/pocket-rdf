@@ -1,0 +1,34 @@
+@prefix ex:   <http://example.org/library/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Catalog B: Science Fiction & Thriller books
+
+ex:author-asimov   a  ex:Author ;
+    ex:name        "Isaac Asimov" ;
+    ex:birthYear   1920 .
+
+ex:author-lecarre  a  ex:Author ;
+    ex:name        "John le Carré" ;
+    ex:birthYear   1931 .
+
+ex:genre-scifi     a  ex:Genre ;
+    ex:label       "Science Fiction" .
+
+ex:genre-thriller  a  ex:Genre ;
+    ex:label       "Thriller" .
+
+ex:book-foundation a  ex:Book ;
+    ex:title       "Foundation" ;
+    ex:author      ex:author-asimov ;
+    ex:genre       ex:genre-scifi ;
+    ex:published   1951 ;
+    ex:pages       244 .
+
+ex:book-spy        a  ex:Book ;
+    ex:title       "The Spy Who Came in from the Cold" ;
+    ex:author      ex:author-lecarre ;
+    ex:genre       ex:genre-thriller ;
+    ex:published   1963 ;
+    ex:pages       224 .

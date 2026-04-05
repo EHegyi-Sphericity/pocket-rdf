@@ -1,0 +1,14 @@
+@prefix ex:   <http://example.org/library/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Catalog C: a book missing a title and an author missing a name.
+
+ex:book-invalid    a  ex:Book ;
+    ex:author      ex:author-tolkien ;
+    ex:genre       ex:genre-fantasy ;
+    ex:published   1977 ;
+    ex:pages       365 .
+
+ex:author-unknown  a  ex:Author ;
+    ex:birthYear   1900 .

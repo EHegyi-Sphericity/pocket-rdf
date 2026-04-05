@@ -1,0 +1,15 @@
+# List all FullModel header information from each named graph.
+# CGMES files contain a md:FullModel resource describing the profile and version.
+
+PREFIX md: <http://iec.ch/TC57/61970-552/ModelDescription/1#>
+
+SELECT ?graph ?model ?profile ?description ?created
+WHERE {
+    GRAPH ?graph {
+        ?model a md:FullModel .
+        OPTIONAL { ?model md:Model.profile ?profile . }
+        OPTIONAL { ?model md:Model.description ?description . }
+        OPTIONAL { ?model md:Model.created ?created . }
+    }
+}
+ORDER BY ?graph
