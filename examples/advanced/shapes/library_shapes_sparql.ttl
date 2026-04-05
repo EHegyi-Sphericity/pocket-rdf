@@ -1,0 +1,31 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix ex:   <http://example.org/library/> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# SPARQL-based constraint: a Book must be published after its Author was born.
+# This cross-entity rule cannot be expressed with simple SHACL property shapes.
+
+ex:BookPublishedAfterAuthorBornShape  a  sh:NodeShape ;
+    sh:targetClass  ex:Book ;
+    sh:sparql [
+        sh:message "A Book must not be published before its Author was born ({?authorName}, born {?birthYear})." ;
+        sh:prefixes ex:prefixes ;
+        sh:select """
+            SELECT $this ?authorName ?birthYear ?published
+            WHERE {
+                $this ex:published ?published ;
+                      ex:author    ?author .
+                ?author ex:birthYear ?birthYear ;
+                        ex:name      ?authorName .
+                FILTER (?published < ?birthYear)
+            }
+        """ ;
+    ] .
+
+# Prefix declarations for the SPARQL constraint above.
+ex:prefixes  a  owl:Ontology ;
+    sh:declare [
+        sh:prefix    "ex" ;
+        sh:namespace "http://example.org/library/"^^xsd:anyURI ;
+    ] .

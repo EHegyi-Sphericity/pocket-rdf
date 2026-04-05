@@ -24,6 +24,7 @@ lost.
 | `data/catalog_a.ttl` | Fantasy books (Tolkien) — forms one named graph. |
 | `data/catalog_b.ttl` | Sci-fi & thriller books (Asimov, le Carré) — forms another named graph. |
 | `data/catalog_c_invalid.ttl` | A book without a title and an author without a name — non-conformant. |
+| `data/catalog_d_sparql_invalid.ttl` | A book published before its author was born — violates the SPARQL-based constraint. |
 
 ## Queries
 
@@ -38,6 +39,7 @@ lost.
 | File | Description |
 |------|-------------|
 | `shapes/library_shapes.ttl` | Same SHACL shapes as the simple examples — works across named graphs. |
+| `shapes/library_shapes_sparql.ttl` | SPARQL-based SHACL constraint: a book must not be published before its author was born. |
 
 ---
 
@@ -58,6 +60,15 @@ pocket-rdf serialize data/catalog_a.ttl data/catalog_b.ttl \
 
 > **Note:** Formats like Turtle or RDF/XML cannot represent named graphs. Use
 > TriG (`.trig`) or N-Quads (`.nq`) when serializing datasets.
+
+For comparison, serialize both catalogs into a **single merged graph** (without
+`--dataset`). All triples are combined and graph boundaries are lost:
+
+```bash
+# Two catalogs → single Turtle file (no named graphs)
+pocket-rdf serialize data/catalog_a.ttl data/catalog_b.ttl \
+  --out output/catalogs_merged.ttl
+```
 
 ## 2. Query
 
@@ -82,6 +93,8 @@ pocket-rdf query data/catalog_a.ttl data/catalog_b.ttl \
   --query queries/cross_graph_authors.sparql \
   --out output/cross_graph_authors.json
 ```
+
+> **Note:** The last query executes successfully but returns no results — each author exists in only one catalog.
 
 ## 3. Validate
 
@@ -109,6 +122,34 @@ pocket-rdf validate data/catalog_a.ttl data/catalog_b.ttl data/catalog_c_invalid
   --dataset \
   --shapes shapes/library_shapes.ttl \
   --out output/validation_fail.ttl
+```
+
+Expected output:
+
+```
+Validation failed: Data does not conform to SHACL shapes.
+```
+
+### SPARQL-based SHACL constraint
+
+The `library_shapes_sparql.ttl` shape uses an embedded SPARQL query (`sh:sparql`)
+to enforce a cross-entity rule that cannot be expressed with basic SHACL property
+constraints: *a book must not be published before its author was born*.
+
+```bash
+# Valid data — all books published after their authors were born
+pocket-rdf validate data/catalog_a.ttl data/catalog_b.ttl \
+  --dataset \
+  --shapes shapes/library_shapes_sparql.ttl \
+  --out output/sparql_validation_pass.ttl
+```
+
+```bash
+# Invalid data — catalog_d contains a book published before the author was born
+pocket-rdf validate data/catalog_d_sparql_invalid.ttl \
+  --dataset \
+  --shapes shapes/library_shapes_sparql.ttl \
+  --out output/sparql_validation_fail.ttl
 ```
 
 Expected output:

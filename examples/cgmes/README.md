@@ -1,8 +1,8 @@
 # CGMES Examples
 
-These examples demonstrate pocketRDF's primary use case: **validating and querying
-CGMES (Common Grid Model Exchange Standard) datasets** used in the European
-power system industry.
+These examples demonstrate one important use case for pocketRDF:
+**validating and querying CGMES (Common Grid Model Exchange Standard) datasets**
+used in the European power system industry.
 
 CGMES datasets consist of multiple RDF/XML files, each representing a distinct
 profile (Equipment, Topology, State Variables, etc.). pocketRDF loads each file
@@ -68,6 +68,17 @@ The `adapted_cgmes_2_4_15_shacl/` directory contains SHACL shapes adapted for
 CGMES v2.4.15 profiles, originally licensed by ENTSO-E under the Apache License 2.0 (see
 `LICENSE.txt` and `NOTICE.txt`).
 
+> **Why adapted shapes?**
+> The original SHACL shapes published at
+> [entsoe/application-profiles-library](https://github.com/entsoe/application-profiles-library/tree/main/CGMES/PastReleases/v2-4/Enchanced/SHACL)
+> are not suitable for validating CGMES CIM/XML test models as-is. They require
+> property values to be typed as `xsd:float`, `xsd:boolean`, `xsd:integer`,
+> `xsd:decimal`, `xsd:dateTime`, etc., whereas the official CGMES CIM/XML test
+> files (and the CGMES specification itself) serialize all datatypes as plain
+> string literals. The shapes in this directory have been adapted accordingly.
+> The specific modifications applied to each file are documented in the comment
+> section at the beginning of each adapted `.ttl` file.
+
 | Shape file | CGMES Profile |
 |------------|---------------|
 | `EquipmentProfile.ttl` | Equipment (EQ) |
@@ -82,7 +93,7 @@ CGMES v2.4.15 profiles, originally licensed by ENTSO-E under the Apache License 
 
 ---
 
-## Serialize CGMES Data
+## 1. Serialize CGMES Data
 
 Convert the dataset to TriG format (preserving named graphs):
 
@@ -92,7 +103,7 @@ pocket-rdf serialize models/*.xml \
   --out output/cgmes_dataset.trig
 ```
 
-## Query CGMES Data
+## 2. Query CGMES Data
 
 Inspect model headers to verify which profiles are present:
 
@@ -130,7 +141,7 @@ pocket-rdf query models/*.xml \
   --out output/acline_segments.csv
 ```
 
-## Validate CGMES Data
+## 3. Validate CGMES Data
 
 Validate the Equipment profile against its SHACL shapes:
 

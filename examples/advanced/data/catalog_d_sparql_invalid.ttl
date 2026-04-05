@@ -1,0 +1,19 @@
+@prefix ex:   <http://example.org/library/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Catalog D: a book with an impossible publication year (before the author was born).
+
+ex:author-future   a  ex:Author ;
+    ex:name        "Future Author" ;
+    ex:birthYear   2000 .
+
+ex:genre-scifi     a  ex:Genre ;
+    ex:label       "Science Fiction" .
+
+ex:book-impossible a  ex:Book ;
+    ex:title       "Published Before Birth" ;
+    ex:author      ex:author-future ;
+    ex:genre       ex:genre-scifi ;
+    ex:published   1990 ;
+    ex:pages       100 .
