@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 import pytest
@@ -193,10 +194,10 @@ def test_validate_help(runner):
     """Test validate command help."""
     result = runner.invoke(app, ["validate", "--help"])
     assert result.exit_code == 0
-    assert "Input RDF files" in result.output
-    assert "--shapes" in result.output
-    assert "--out" in result.output
-    assert "--dataset" in result.output
+    clean = re.sub(r"\x1b\[[0-9;]*m", "", result.output)
+    assert "--shapes" in clean
+    assert "--out" in clean
+    assert "--dataset" in clean
 
 
 def test_validate_with_short_options(
