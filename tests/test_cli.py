@@ -167,7 +167,7 @@ def test_main_help(runner):
     """Test main app help."""
     result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
-    assert "Pocket RDF command‑line tools" in result.output
+    assert "Pocket RDF command-line tools" in result.output
     assert "validate" in result.output
     assert "query" in result.output
     assert "serialize" in result.output
