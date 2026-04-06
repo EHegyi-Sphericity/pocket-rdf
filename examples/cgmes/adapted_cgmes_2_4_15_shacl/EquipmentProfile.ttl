@@ -5070,7 +5070,7 @@ eq:StaticVarCompensator.capacitiveRating-cardinality
 eq:StaticVarCompensator.inductiveRating-datatype
         rdf:type        sh:PropertyShape;
         sh:datatype     xsd:string;
-        sh:pattern      "^(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
+        sh:pattern      "^[+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
         sh:description  "This constraint validates the datatype of the property (attribute).";
         sh:group        eq:DatatypesGroup;
         sh:message      "The datatype is not literal or it violates the xsd datatype.";
@@ -7491,7 +7491,7 @@ eq:PowerTransformerEnd.b0-cardinality
 eq:PowerTransformerEnd.b-datatype
         rdf:type        sh:PropertyShape;
         sh:datatype     xsd:string;
-        sh:pattern      "^(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
+        sh:pattern      "^[+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
         sh:description  "This constraint validates the datatype of the property (attribute).";
         sh:group        eq:DatatypesGroup;
         sh:message      "The datatype is not literal or it violates the xsd datatype.";
@@ -11397,7 +11397,7 @@ eq:TapChangerTablePoint.g-cardinality
 eq:TapChangerTablePoint.r-datatype
         rdf:type        sh:PropertyShape;
         sh:datatype     xsd:string;
-        sh:pattern      "^(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
+        sh:pattern      "^[+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
         sh:description  "This constraint validates the datatype of the property (attribute).";
         sh:group        eq:DatatypesGroup;
         sh:message      "The datatype is not literal or it violates the xsd datatype.";
@@ -11470,7 +11470,7 @@ eq:TapChangerTablePoint.step-cardinality
 eq:TapChangerTablePoint.x-datatype
         rdf:type        sh:PropertyShape;
         sh:datatype     xsd:string;
-        sh:pattern      "^(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
+        sh:pattern      "^[+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
         sh:description  "This constraint validates the datatype of the property (attribute).";
         sh:group        eq:DatatypesGroup;
         sh:message      "The datatype is not literal or it violates the xsd datatype.";
@@ -11869,7 +11869,7 @@ eq:LinearShuntCompensator.b0PerSection-cardinality
 eq:LinearShuntCompensator.bPerSection-datatype
         rdf:type        sh:PropertyShape;
         sh:datatype     xsd:string;
-        sh:pattern      "^(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
+        sh:pattern      "^[+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
         sh:description  "This constraint validates the datatype of the property (attribute).";
         sh:group        eq:DatatypesGroup;
         sh:message      "The datatype is not literal or it violates the xsd datatype.";
@@ -13455,7 +13455,7 @@ eq:GeneratingUnit.ControlAreaGeneratingUnit-inverseNodePresent
 eq:GeneratingUnit.minOperatingP-datatype
         rdf:type        sh:PropertyShape;
         sh:datatype     xsd:string;
-        sh:pattern      "^(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
+        sh:pattern      "^[+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
         sh:description  "This constraint validates the datatype of the property (attribute).";
         sh:group        eq:DatatypesGroup;
         sh:message      "The datatype is not literal or it violates the xsd datatype.";
@@ -13616,7 +13616,7 @@ eq:GeneratingUnit.GrossToNetActivePowerCurves-inverseNodePresent
 eq:GeneratingUnit.initialP-datatype
         rdf:type        sh:PropertyShape;
         sh:datatype     xsd:string;
-        sh:pattern      "^(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
+        sh:pattern      "^[+-]?(?:\\d+\\.\\d*|\\.\\d+|\\d+)(?:[eE][+-]?\\d+)?$";
         sh:description  "This constraint validates the datatype of the property (attribute).";
         sh:group        eq:DatatypesGroup;
         sh:message      "The datatype is not literal or it violates the xsd datatype.";
