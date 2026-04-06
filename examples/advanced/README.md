@@ -2,7 +2,7 @@
 
 # Advanced Examples — Named Graphs (Dataset)
 
-These examples demonstrate pocketRDF operations using **named graphs** via the
+These examples demonstrate pocket-rdf operations using **named graphs** via the
 `--dataset` flag. Each input file is loaded into its own named graph inside an
 RDF Dataset. This preserves the provenance of each file and enables SPARQL
 queries that use the `GRAPH` keyword to distinguish data sources.
@@ -21,7 +21,7 @@ lost.
 
 ## Prerequisites
 
-### 1. Install pocketRDF
+### 1. Install pocket-rdf
 
 ```bash
 pip install .

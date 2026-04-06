@@ -1,4 +1,8 @@
-# pocketRDF
+# pocket-rdf
+
+[![CI](https://github.com/EHegyi-Sphericity/pocket-rdf/actions/workflows/tests.yml/badge.svg)](https://github.com/EHegyi-Sphericity/pocket-rdf/actions/workflows/tests.yml)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 A lightweight RDF toolkit for Python, providing command-line utilities for loading, serializing, querying, and validating RDF data.
 
@@ -35,7 +39,7 @@ pip install .
 
 ## Usage
 
-pocketRDF provides three main commands: `serialize`, `query`, and `validate`.
+pocket-rdf provides three main commands: `serialize`, `query`, and `validate`.
 
 ### Serialize RDF Data
 

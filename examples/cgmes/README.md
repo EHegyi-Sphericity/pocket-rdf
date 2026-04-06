@@ -2,18 +2,18 @@
 
 # CGMES Examples
 
-These examples demonstrate one important use case for pocketRDF:
+These examples demonstrate one important use case for pocket-rdf:
 **validating and querying CGMES (Common Grid Model Exchange Standard) datasets**
 used in the European power system industry.
 
 CGMES datasets consist of multiple RDF/XML files, each representing a distinct
-profile (Equipment, Topology, State Variables, etc.). pocketRDF loads each file
+profile (Equipment, Topology, State Variables, etc.). pocket-rdf loads each file
 into its own named graph (`--dataset`), enabling profile-aware validation and
 querying.
 
 ## Prerequisites
 
-### 1. Install pocketRDF
+### 1. Install pocket-rdf
 
 ```bash
 pip install .
