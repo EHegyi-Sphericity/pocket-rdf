@@ -63,3 +63,7 @@ pythonVersion = "3.12"
 typeCheckingMode = "standard"
 include = ["src"]
 exclude = ["**/node_modules", "**/__pycache__", "**/.venv", "**/.*", "tests/**", "**/build/**"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--strict-markers --tb=short"
