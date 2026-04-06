@@ -4,10 +4,11 @@ A lightweight RDF toolkit for Python, providing command-line utilities for loadi
 
 ## Features
 
-- **Load RDF Data**: Support for multiple RDF formats (Turtle, RDF/XML, JSON-LD, etc.)
-- **Serialization**: Export query results in various formats
-- **SPARQL Querying**: Execute SPARQL queries on RDF graphs
-- **SHACL Validation**: Validate RDF data against SHACL shapes
+- **Load RDF Data**: Support for Turtle (`.ttl`), RDF/XML (`.xml`, `.rdf`), JSON-LD (`.json`, `.jsonld`), N-Triples (`.nt`), TriG (`.trig`), and N-Quads (`.nq`)
+- **Named Graph Support**: Load each file into its own named graph with `--dataset`, enabling provenance tracking and `GRAPH`-aware SPARQL queries
+- **Serialization**: Convert between any supported format; use TriG or N-Quads to preserve named graphs
+- **SPARQL Querying**: Execute SPARQL queries on single graphs or datasets
+- **SHACL Validation**: Validate RDF data against SHACL shapes (including SPARQL-based constraints)
 - **CLI Interface**: Easy-to-use command-line tools built with Typer
 
 ## Installation
@@ -51,7 +52,7 @@ Arguments:
 Options:
 
 - `--out`, `-o`: Output file (format inferred from extension)
-- `--dataset`, `-d`: Use dataset for input RDF files
+- `--dataset`, `-d`: Load each input file into its own named graph (enables TriG/N-Quads output)
 
 ### Query RDF Data
 
@@ -69,7 +70,7 @@ Options:
 
 - `--query`, `-q`: SPARQL query file
 - `--out`, `-o`: Output file for results
-- `--dataset`, `-d`: Use dataset for input RDF files
+- `--dataset`, `-d`: Load each input file into its own named graph
 
 ### Validate RDF Data
 
@@ -87,36 +88,19 @@ Options:
 
 - `--shapes`, `-s`: SHACL shapes file
 - `--out`, `-o`: Output file for validation report
-- `--dataset`, `-d`: Use dataset for input RDF files
+- `--dataset`, `-d`: Load each input file into its own named graph
 
 ## Examples
 
-### Serializing to Different Formats
+The [`examples/`](examples/) directory contains three progressive sets of
+working examples, each with its own README, sample data, SPARQL queries, and
+SHACL shapes:
 
-```bash
-pocket-rdf serialize \
-  input.ttl \
-  --out output.jsonld
-```
-
-### Querying RDF Data
-
-```bash
-pocket-rdf query \
-  data.ttl \
-  --query count_subjects.sparql \
-  --out query_results.txt
-```
-
-### Validating CGMES Data
-
-```bash
-pocket-rdf validate \
-  ../files/*.xml \
-  --shapes ../shapes/61970-600-2_Equipment-Simple-SHACL_v2-4-15.ttl \
-  --out validation_report.ttl \
-  --dataset
-```
+| Directory | Scope | Key concepts |
+|-----------|-------|--------------|
+| [`examples/simple/`](examples/simple/) | Single graph | Load, serialize, query, and validate a small library dataset |
+| [`examples/advanced/`](examples/advanced/) | Named graphs (`--dataset`) | Multiple catalogs, `GRAPH` queries, TriG/N-Quads, SPARQL-based SHACL |
+| [`examples/cgmes/`](examples/cgmes/) | CGMES power system data | Multi-profile datasets, ENTSO-E SHACL shapes, RDFS-enhanced querying |
 
 ## Development
 

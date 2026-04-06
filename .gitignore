@@ -15,3 +15,5 @@ examples/*/output/*
 !examples/*/output/.gitkeep
 examples/cgmes/models/*
 !examples/cgmes/models/.gitkeep
+examples/cgmes/rdfs/*
+!examples/cgmes/rdfs/.gitkeep

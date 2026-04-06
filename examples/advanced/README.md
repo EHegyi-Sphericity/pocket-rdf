@@ -1,3 +1,5 @@
+← [Back to main README](../../README.md) · [Simple examples](../simple/) · [CGMES examples](../cgmes/)
+
 # Advanced Examples — Named Graphs (Dataset)
 
 These examples demonstrate pocketRDF operations using **named graphs** via the
@@ -16,6 +18,20 @@ Use `--dataset` when you need to:
 
 Without `--dataset`, all files are merged into a single graph and their origin is
 lost.
+
+## Prerequisites
+
+### 1. Install pocketRDF
+
+```bash
+pip install .
+```
+
+### 2. Navigate to working directory
+
+```
+examples\advanced
+```
 
 ## Data
 

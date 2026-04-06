@@ -1,9 +1,25 @@
+← [Back to main README](../../README.md) · [Advanced examples](../advanced/) · [CGMES examples](../cgmes/)
+
 # Simple Examples — Single Graph
 
 These examples demonstrate pocketRDF operations on a **single, unified RDF graph**
 (no `--dataset` flag). All triples are loaded into one graph, SPARQL queries use
 plain triple patterns (no `GRAPH` keyword), and SHACL shapes validate the graph
 directly.
+
+## Prerequisites
+
+### 1. Install pocketRDF
+
+```bash
+pip install .
+```
+
+### 2. Navigate to working directory
+
+```
+examples\simple
+```
 
 ## Data
 

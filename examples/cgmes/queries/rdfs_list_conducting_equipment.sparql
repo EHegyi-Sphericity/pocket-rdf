@@ -1,0 +1,24 @@
+# List all instances of ConductingEquipment using the RDFS class hierarchy.
+# Instance data only contains concrete types (ACLineSegment, Breaker, etc.).
+# By walking rdfs:subClassOf from the RDFS, this query discovers every class
+# that is a (transitive) subclass of ConductingEquipment and matches instances
+# of those types — something that is not possible without the ontology.
+#
+# Requires: models/*.xml AND rdfs/*.rdf loaded together:
+#   pocket-rdf query models/*BC_EQ*.xml rdfs/*.rdf --dataset --query <this-file>
+
+PREFIX cim:  <http://iec.ch/TC57/2013/CIM-schema-cim16#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT ?name ?typeLabel ?instance
+WHERE {
+    GRAPH ?g1 {
+        ?instance a ?concreteType ;
+            cim:IdentifiedObject.name ?name .
+    }
+    GRAPH ?g2 {
+        ?concreteType rdfs:subClassOf+ cim:ConductingEquipment ;
+            rdfs:label ?typeLabel .
+    }
+}
+ORDER BY ?typeLabel ?name

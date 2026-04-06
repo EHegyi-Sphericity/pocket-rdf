@@ -1,3 +1,5 @@
+← [Back to main README](../../README.md) · [Simple examples](../simple/) · [Advanced examples](../advanced/)
+
 # CGMES Examples
 
 These examples demonstrate one important use case for pocketRDF:
@@ -38,7 +40,7 @@ Example directory structure after setup:
 
 ```
 examples/cgmes/
-├── adapted_cgmes_2_4_15_shacl/   ← SHACL shapes (included)
+├── adapted_cgmes_2_4_15_shacl/    ← SHACL shapes (included)
 ├── models/                        ← CGMES XML files (you provide)
 │   ├── MiniGridTestConfiguration_BC_DL_v3.0.0.xml
 │   ├── MiniGridTestConfiguration_BC_EQ_v3.0.0.xml
@@ -48,8 +50,15 @@ examples/cgmes/
 │   ├── MiniGridTestConfiguration_EQ_BD_v3.0.0.xml
 │   ├── MiniGridTestConfiguration_TP_BD_v3.0.0.xml
 │   └── ...
+├── output/                        ← Generated output (git-ignored)
 ├── queries/                       ← SPARQL queries (included)
-└── output/                        ← Generated output (git-ignored)
+└── ...
+```
+
+### 3. Navigate to working directory
+
+```
+examples/cgmes
 ```
 
 ## Queries
@@ -61,6 +70,8 @@ examples/cgmes/
 | `queries/list_types_per_graph.sparql` | List CIM types and instance counts per profile. |
 | `queries/list_substations.sparql` | List all Substations with name and region. |
 | `queries/list_acline_segments.sparql` | List ACLineSegments with length and resistance. |
+| `queries/rdfs_list_conducting_equipment.sparql` | List all ConductingEquipment instances using the RDFS class hierarchy. |
+| `queries/rdfs_discover_properties.sparql` | Discover all properties defined for ACLineSegment in the RDFS. |
 
 ## SHACL Shapes
 
@@ -141,7 +152,61 @@ pocket-rdf query models/*.xml \
   --out output/acline_segments.csv
 ```
 
-## 3. Validate CGMES Data
+## 3. RDFS-Enhanced Querying
+
+The queries above work on instance data alone. By loading the
+[Equipment RDFS](https://github.com/entsoe/application-profiles-library/blob/main/CGMES/PastReleases/v2-4/Original/RDFS/EquipmentProfileCoreOperationShortCircuitRDFSAugmented-v2_4_15-4Sep2020.rdf)
+alongside the instance data, SPARQL queries can join instance data with schema
+metadata — class descriptions, inheritance hierarchies, and property definitions
+— without any code changes.
+
+### Download the RDFS file
+
+Download the Equipment RDFS file from the ENTSO-E application profiles library
+and place it in the `rdfs/` directory:
+
+https://github.com/entsoe/application-profiles-library/blob/main/CGMES/PastReleases/v2-4/Original/RDFS/EquipmentProfileCoreOperationShortCircuitRDFSAugmented-v2_4_15-4Sep2020.rdf
+
+Example directory structure after setup:
+
+```
+examples/cgmes/
+├── adapted_cgmes_2_4_15_shacl/    ← SHACL shapes (included)
+├── models/                        ← CGMES XML files (you provide)
+├── output/                        ← Generated output (git-ignored)
+├── queries/                       ← SPARQL queries (included)
+└── rdfs/                          ← Equipment RDFS file (you provide)
+    └── EquipmentProfileCoreOperationShortCircuitRDFSAugmented-v2_4_15-4Sep2020.rdf
+```
+
+### List all ConductingEquipment instances
+
+Instance data only contains concrete types (`ACLineSegment`, `Breaker`,
+`PowerTransformer`, etc.). There is no `rdf:type cim:ConductingEquipment`
+triple in the data. By walking `rdfs:subClassOf+` from the RDFS, this query
+discovers every class that is a transitive subclass of `ConductingEquipment`
+and matches instances of those types:
+
+```bash
+pocket-rdf query models/*BC_EQ*.xml rdfs/*.rdf \
+  --dataset \
+  --query queries/rdfs_list_conducting_equipment.sparql \
+  --out output/conducting_equipment.csv
+```
+
+### Discover properties defined for a class
+
+Query the RDFS alone (no instance data needed) to list every property defined
+for `ACLineSegment`, including data type, multiplicity, and description:
+
+```bash
+pocket-rdf query rdfs/*.rdf \
+  --dataset \
+  --query queries/rdfs_discover_properties.sparql \
+  --out output/acline_properties.csv
+```
+
+## 4. Validate CGMES Data
 
 Validate the Equipment profile against its SHACL shapes:
 

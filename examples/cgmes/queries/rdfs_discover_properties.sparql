@@ -1,0 +1,25 @@
+# Discover all properties defined for ACLineSegment in the RDFS.
+# Shows property name, data type or range, multiplicity, and description.
+# This query works on the RDFS alone — no instance data needed.
+#
+# Usage:
+#   pocket-rdf query rdfs/*.rdf --dataset --query <this-file>
+
+PREFIX cim:  <http://iec.ch/TC57/2013/CIM-schema-cim16#>
+PREFIX cims: <http://iec.ch/TC57/1999/rdf-schema-extensions-19990926#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+SELECT ?propertyLabel ?dataType ?range ?multiplicity ?description
+WHERE {
+    GRAPH ?g {
+        ?property a rdf:Property ;
+            rdfs:label ?propertyLabel ;
+            rdfs:domain cim:ACLineSegment .
+        OPTIONAL { ?property cims:dataType ?dataType . }
+        OPTIONAL { ?property rdfs:range ?range . }
+        OPTIONAL { ?property cims:multiplicity ?multiplicity . }
+        OPTIONAL { ?property rdfs:comment ?description . }
+    }
+}
+ORDER BY ?propertyLabel
