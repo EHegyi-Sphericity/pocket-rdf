@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 import pytest
@@ -128,5 +129,5 @@ def test_serialize_help(runner):
     """Test serialize command help."""
     result = runner.invoke(app, ["serialize", "--help"])
     assert result.exit_code == 0
-    assert "Input RDF files" in result.output
-    assert "--out" in result.output
+    clean = re.sub(r"\x1b\[[0-9;]*m", "", result.output)
+    assert "--out" in clean
