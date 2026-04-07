@@ -58,6 +58,65 @@ def test_query(tmp_path, query_file, out_ext):
     assert out.stat().st_size > 0
 
 
+def test_query_ask(tmp_path):
+    """ASK query should print the boolean result and serialize to JSON."""
+    out = tmp_path / "has_fantasy_books.json"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(SIMPLE / "data" / "library.ttl"),
+            "--query",
+            str(SIMPLE / "queries" / "has_fantasy_books.sparql"),
+            "--out",
+            str(out),
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    assert "ASK query result:" in result.output
+    assert out.exists()
+    assert '"boolean"' in out.read_text()
+
+
+def test_query_describe(tmp_path):
+    """DESCRIBE query should produce RDF output about the requested resource."""
+    out = tmp_path / "describe_tolkien.ttl"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(SIMPLE / "data" / "library.ttl"),
+            "--query",
+            str(SIMPLE / "queries" / "describe_tolkien.sparql"),
+            "--out",
+            str(out),
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    assert out.exists()
+    assert out.stat().st_size > 0
+
+
+def test_query_construct(tmp_path):
+    """CONSTRUCT query should produce a new RDF graph."""
+    out = tmp_path / "books_with_authors.ttl"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(SIMPLE / "data" / "library.ttl"),
+            "--query",
+            str(SIMPLE / "queries" / "books_with_authors.sparql"),
+            "--out",
+            str(out),
+        ],
+    )
+    assert result.exit_code == 0, result.output
+    assert out.exists()
+    content = out.read_text()
+    assert "authorName" in content
+
+
 # ── Validate ─────────────────────────────────────────────────────────────────
 
 

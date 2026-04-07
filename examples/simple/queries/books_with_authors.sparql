@@ -1,0 +1,14 @@
+# CONSTRUCT a simplified graph linking book titles directly to author names.
+
+PREFIX ex: <http://example.org/library/>
+
+CONSTRUCT {
+    ?book ex:title      ?title .
+    ?book ex:authorName ?authorName .
+}
+WHERE {
+    ?book  a          ex:Book ;
+           ex:title   ?title ;
+           ex:author  ?author .
+    ?author ex:name   ?authorName .
+}

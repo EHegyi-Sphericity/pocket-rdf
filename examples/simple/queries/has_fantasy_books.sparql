@@ -1,0 +1,8 @@
+# ASK whether the library contains any Fantasy books.
+
+PREFIX ex: <http://example.org/library/>
+
+ASK {
+    ?book  a         ex:Book ;
+           ex:genre  ex:genre-fantasy .
+}

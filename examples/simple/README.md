@@ -35,6 +35,9 @@ examples\simple
 | `queries/list_books.sparql` | List all books with their author and genre. |
 | `queries/count_books_per_author.sparql` | Count books per author. |
 | `queries/books_before_1960.sparql` | Find books published before 1960. |
+| `queries/has_fantasy_books.sparql` | ASK whether the library contains any Fantasy books. |
+| `queries/describe_tolkien.sparql` | DESCRIBE all known facts about J.R.R. Tolkien. |
+| `queries/books_with_authors.sparql` | CONSTRUCT a simplified graph linking titles to author names. |
 
 ## Shapes
 
@@ -65,6 +68,10 @@ The output format is inferred from the file extension.
 
 Run SPARQL queries against the data.
 
+### SELECT query
+
+Return tabular results matching a pattern — output formats include JSON, CSV, XML, and plain text.
+
 ```bash
 # List all books (JSON output)
 pocket-rdf query data/library.ttl \
@@ -80,6 +87,41 @@ pocket-rdf query data/library.ttl \
 pocket-rdf query data/library.ttl \
   --query queries/books_before_1960.sparql \
   --out output/books_before_1960.txt
+```
+
+### ASK query
+
+Check whether a condition holds (returns true/false).
+
+```bash
+# Are there any Fantasy books? (XML output)
+pocket-rdf query data/library.ttl \
+  --query queries/has_fantasy_books.sparql \
+  --out output/has_fantasy_books.xml
+```
+
+### DESCRIBE query
+
+Retrieve all known facts about a resource. DESCRIBE results are RDF graphs, so
+use an RDF output format (`.ttl`, `.xml`, `.jsonld`, etc.).
+
+```bash
+# Everything about Tolkien (Turtle output)
+pocket-rdf query data/library.ttl \
+  --query queries/describe_tolkien.sparql \
+  --out output/describe_tolkien.ttl
+```
+
+### CONSTRUCT query
+
+Build a new RDF graph by rewriting matched patterns. Like DESCRIBE, the result is
+an RDF graph.
+
+```bash
+# Simplified book→author graph (Turtle output)
+pocket-rdf query data/library.ttl \
+  --query queries/books_with_authors.sparql \
+  --out output/books_with_authors.ttl
 ```
 
 ## 3. Validate
