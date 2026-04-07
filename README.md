@@ -1,6 +1,7 @@
 # pocket-rdf
 
 [![CI](https://github.com/EHegyi-Sphericity/pocket-rdf/actions/workflows/tests.yml/badge.svg)](https://github.com/EHegyi-Sphericity/pocket-rdf/actions/workflows/tests.yml)
+[![PyPI](https://img.shields.io/pypi/v/pocket-rdf)](https://pypi.org/project/pocket-rdf/)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
@@ -21,19 +22,17 @@ A lightweight RDF toolkit for Python, providing command-line utilities for loadi
 
 - Python 3.10 or higher
 
-### Install from Source
+### Install from PyPI
 
-Clone the repository and install:
+```bash
+pip install pocket-rdf
+```
+
+### Install from Source
 
 ```bash
 git clone https://github.com/EHegyi-Sphericity/pocket-rdf.git
 cd pocket-rdf
-pip install .
-```
-
-Or install directly from the directory:
-
-```bash
 pip install .
 ```
 
