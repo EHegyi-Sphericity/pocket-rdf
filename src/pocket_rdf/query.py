@@ -82,7 +82,7 @@ def execute_query(
     rdf_obj : Union[Graph, Dataset]
         RDFLib graph or dataset to query.
 
-    query : Path
+    queryfile : Path
         Path to the SPARQL query file.
 
     Returns
