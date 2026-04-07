@@ -16,12 +16,19 @@ from typing import Optional, Union
 from rdflib import Dataset, Graph
 from rdflib.query import Result
 
-# Mapping output file extensions → rdflib serializer formats for SELECT / ASK results
-SERIALIZER_FORMATS_SELECT_ASK = {
+# Mapping output file extensions → rdflib serializer formats for SELECT results
+SERIALIZER_FORMATS_SELECT = {
     ".xml": "xml",
     ".json": "json",
     ".txt": "txt",
     ".csv": "csv",
+}
+
+# Mapping output file extensions → rdflib serializer formats for ASK results
+# (rdflib's txt and csv serializers only support SELECT)
+SERIALIZER_FORMATS_ASK = {
+    ".xml": "xml",
+    ".json": "json",
 }
 
 # Mapping output file extensions → rdflib serializer formats for CONSTRUCT / DESCRIBE
@@ -37,9 +44,7 @@ SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE = {
 }
 
 
-def detect_output_format(
-    filepath: Path, is_graph_result: bool = False
-) -> Optional[str]:
+def detect_output_format(filepath: Path, result_type: str = "SELECT") -> Optional[str]:
     """
     Detect suitable serialization format from the file extension.
 
@@ -48,19 +53,21 @@ def detect_output_format(
     filepath : Path
         The target output file path.
 
-    is_graph_result : bool
-        Whether the query result is a graph (CONSTRUCT/DESCRIBE) rather than
-        a tabular/boolean result (SELECT/ASK).
+    result_type : str
+        The SPARQL result type: "SELECT", "ASK", "CONSTRUCT", or "DESCRIBE".
 
     Returns
     -------
     Optional[str]
         rdflib-compatible format string, or None if unsupported.
     """
-    if is_graph_result:
-        return SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE.get(filepath.suffix.lower())
-    else:
-        return SERIALIZER_FORMATS_SELECT_ASK.get(filepath.suffix.lower())
+    format_map = {
+        "SELECT": SERIALIZER_FORMATS_SELECT,
+        "ASK": SERIALIZER_FORMATS_ASK,
+        "CONSTRUCT": SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE,
+        "DESCRIBE": SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE,
+    }
+    return format_map.get(result_type, {}).get(filepath.suffix.lower())
 
 
 def execute_query(
@@ -107,13 +114,13 @@ def serialize_results(results: Result, outfile: Path):
         Target file path for serialized results. Format is inferred from extension.
     """
     try:
-        is_graph_result = results.type in ("CONSTRUCT", "DESCRIBE")
-        outformat = detect_output_format(outfile, is_graph_result)
+        result_type = results.type
+        is_graph_result = result_type in ("CONSTRUCT", "DESCRIBE")
+        outformat = detect_output_format(outfile, result_type)
         if outformat is None:
-            mode_label = "CONSTRUCT/DESCRIBE" if is_graph_result else "SELECT/ASK"
             raise ValueError(
                 f"Unsupported serialization format for file: {outfile} "
-                f"for {mode_label} results."
+                f"for {result_type} results."
             )
 
         outfile.parent.mkdir(parents=True, exist_ok=True)

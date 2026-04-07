@@ -3,7 +3,12 @@ from pathlib import Path
 import pytest
 from rdflib import Dataset, Graph, Literal, URIRef
 
-from pocket_rdf.query import detect_output_format, execute_query, serialize_results
+from pocket_rdf.query import (
+    SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE,
+    detect_output_format,
+    execute_query,
+    serialize_results,
+)
 
 
 @pytest.fixture
@@ -137,7 +142,7 @@ def sample_describe_query_file(tmp_path):
 class TestDetectOutputFormat:
     """Test the detect_output_format function."""
 
-    # --- SELECT/ASK mode (default) ---
+    # --- SELECT mode (default) ---
 
     def test_detect_format_xml(self):
         assert detect_output_format(Path("results.xml")) == "xml"
@@ -159,41 +164,72 @@ class TestDetectOutputFormat:
         assert detect_output_format(Path("results.CSV")) == "csv"
         assert detect_output_format(Path("results.Json")) == "json"
 
-    # --- CONSTRUCT/DESCRIBE mode (is_graph_result=True) ---
+    # --- ASK mode ---
+
+    def test_detect_format_ask_xml(self):
+        assert detect_output_format(Path("results.xml"), result_type="ASK") == "xml"
+
+    def test_detect_format_ask_json(self):
+        assert detect_output_format(Path("results.json"), result_type="ASK") == "json"
+
+    def test_detect_format_ask_txt_unsupported(self):
+        assert detect_output_format(Path("results.txt"), result_type="ASK") is None
+
+    def test_detect_format_ask_csv_unsupported(self):
+        assert detect_output_format(Path("results.csv"), result_type="ASK") is None
+
+    # --- CONSTRUCT/DESCRIBE mode ---
 
     def test_detect_format_graph_ttl(self):
         assert (
-            detect_output_format(Path("results.ttl"), is_graph_result=True) == "turtle"
+            detect_output_format(Path("results.ttl"), result_type="CONSTRUCT")
+            == "turtle"
         )
 
     def test_detect_format_graph_nt(self):
-        assert detect_output_format(Path("results.nt"), is_graph_result=True) == "nt"
+        assert detect_output_format(Path("results.nt"), result_type="CONSTRUCT") == "nt"
 
     def test_detect_format_graph_xml(self):
-        assert detect_output_format(Path("results.xml"), is_graph_result=True) == "xml"
+        assert (
+            detect_output_format(Path("results.xml"), result_type="CONSTRUCT") == "xml"
+        )
 
     def test_detect_format_graph_rdf(self):
-        assert detect_output_format(Path("results.rdf"), is_graph_result=True) == "xml"
+        assert (
+            detect_output_format(Path("results.rdf"), result_type="CONSTRUCT") == "xml"
+        )
 
     def test_detect_format_graph_jsonld(self):
         assert (
-            detect_output_format(Path("results.jsonld"), is_graph_result=True)
+            detect_output_format(Path("results.jsonld"), result_type="CONSTRUCT")
             == "json-ld"
         )
 
     def test_detect_format_graph_json(self):
         assert (
-            detect_output_format(Path("results.json"), is_graph_result=True)
+            detect_output_format(Path("results.json"), result_type="CONSTRUCT")
             == "json-ld"
         )
 
     def test_detect_format_graph_unsupported(self):
-        assert detect_output_format(Path("results.csv"), is_graph_result=True) is None
-        assert detect_output_format(Path("results.nq"), is_graph_result=True) is None
-        assert detect_output_format(Path("results.txt"), is_graph_result=True) is None
         assert (
-            detect_output_format(Path("results.unknown"), is_graph_result=True) is None
+            detect_output_format(Path("results.csv"), result_type="CONSTRUCT") is None
         )
+        assert detect_output_format(Path("results.nq"), result_type="CONSTRUCT") is None
+        assert (
+            detect_output_format(Path("results.txt"), result_type="CONSTRUCT") is None
+        )
+        assert (
+            detect_output_format(Path("results.unknown"), result_type="CONSTRUCT")
+            is None
+        )
+
+    def test_detect_format_describe_same_as_construct(self):
+        for ext, expected in SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE.items():
+            assert (
+                detect_output_format(Path(f"results{ext}"), result_type="DESCRIBE")
+                == expected
+            )
 
 
 class TestExecuteQuery:
@@ -461,16 +497,16 @@ class TestSerializeResults:
         CONSTRUCT results are plain Graphs."""
         results = execute_query(sample_graph, sample_construct_query_file)
         outfile = tmp_path / "construct_results.nq"
-        with pytest.raises(ValueError, match="CONSTRUCT/DESCRIBE"):
+        with pytest.raises(ValueError, match="CONSTRUCT"):
             serialize_results(results, outfile)
 
     def test_serialize_results_construct_txt_unsupported(
         self, tmp_path, sample_graph, sample_construct_query_file
     ):
-        """txt has no rdflib graph serializer; only works for SELECT/ASK results."""
+        """txt has no rdflib graph serializer; only works for SELECT results."""
         results = execute_query(sample_graph, sample_construct_query_file)
         outfile = tmp_path / "construct_results.txt"
-        with pytest.raises(ValueError, match="CONSTRUCT/DESCRIBE"):
+        with pytest.raises(ValueError, match="CONSTRUCT"):
             serialize_results(results, outfile)
 
     def test_serialize_results_describe_ttl(
@@ -488,7 +524,7 @@ class TestSerializeResults:
     ):
         results = execute_query(sample_graph, sample_construct_query_file)
         outfile = tmp_path / "construct_results.csv"
-        with pytest.raises(ValueError, match="CONSTRUCT/DESCRIBE"):
+        with pytest.raises(ValueError, match="CONSTRUCT"):
             serialize_results(results, outfile)
 
     def test_serialize_results_construct_none_graph(
@@ -507,4 +543,22 @@ class TestSerializeResults:
         results = execute_query(sample_graph, sample_query_file)
         outfile = tmp_path / "results.unknown"
         with pytest.raises(ValueError, match="Unsupported serialization format"):
+            serialize_results(results, outfile)
+
+    def test_serialize_results_ask_txt_unsupported(
+        self, tmp_path, sample_graph, sample_ask_true_query_file
+    ):
+        """rdflib's txt serializer only supports SELECT, not ASK."""
+        results = execute_query(sample_graph, sample_ask_true_query_file)
+        outfile = tmp_path / "ask_results.txt"
+        with pytest.raises(ValueError, match="ASK"):
+            serialize_results(results, outfile)
+
+    def test_serialize_results_ask_csv_unsupported(
+        self, tmp_path, sample_graph, sample_ask_true_query_file
+    ):
+        """rdflib's csv serializer only supports SELECT, not ASK."""
+        results = execute_query(sample_graph, sample_ask_true_query_file)
+        outfile = tmp_path / "ask_results.csv"
+        with pytest.raises(ValueError, match="ASK"):
             serialize_results(results, outfile)

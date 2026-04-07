@@ -43,12 +43,17 @@ def query(
         typer.secho(f"Failed to execute query: {error}", fg=typer.colors.RED)
         return
 
-    if not results:
+    if results is None or (results.type == "SELECT" and len(results.bindings) == 0):
         typer.secho(
             "Query executed successfully but returned no results.",
             fg=typer.colors.YELLOW,
         )
         return
+
+    if results.type == "ASK":
+        answer = bool(results)
+        color = typer.colors.GREEN if answer else typer.colors.YELLOW
+        typer.secho(f"ASK query result: {answer}", fg=color)
 
     try:
         serialize_results(results, outfile)

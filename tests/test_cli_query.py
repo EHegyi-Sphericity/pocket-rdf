@@ -243,3 +243,85 @@ def test_query_with_short_options(
     assert result.exit_code == 0
     assert "Query results serialized" in result.output
     assert out_file.exists()
+
+
+@pytest.fixture
+def ask_true_query(tmp_path):
+    """Create a SPARQL ASK query that matches the test data."""
+    query_file = tmp_path / "ask_true.sparql"
+    query_file.write_text(
+        'PREFIX ex: <http://example.org/>\nASK { ex:subject ex:predicate "object" . }'
+    )
+    return query_file
+
+
+@pytest.fixture
+def ask_false_query(tmp_path):
+    """Create a SPARQL ASK query that does not match the test data."""
+    query_file = tmp_path / "ask_false.sparql"
+    query_file.write_text(
+        "PREFIX ex: <http://example.org/>\nASK { ex:nothing ex:predicate ?o . }"
+    )
+    return query_file
+
+
+def test_query_ask_true_prints_result(
+    runner, sample_data_ttl, ask_true_query, tmp_path
+):
+    """ASK query returning True should print the boolean result."""
+    out_file = tmp_path / "ask_result.json"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(sample_data_ttl),
+            "-q",
+            str(ask_true_query),
+            "-o",
+            str(out_file),
+        ],
+    )
+    assert result.exit_code == 0
+    assert "ASK query result: True" in result.output
+    assert "Query results serialized" in result.output
+
+
+def test_query_ask_false_prints_result(
+    runner, sample_data_ttl, ask_false_query, tmp_path
+):
+    """ASK query returning False should print the boolean result and still serialize."""
+    out_file = tmp_path / "ask_result.json"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(sample_data_ttl),
+            "-q",
+            str(ask_false_query),
+            "-o",
+            str(out_file),
+        ],
+    )
+    assert result.exit_code == 0
+    assert "ASK query result: False" in result.output
+    assert "Query results serialized" in result.output
+    assert out_file.exists()
+
+
+def test_query_ask_txt_unsupported(runner, sample_data_ttl, ask_true_query, tmp_path):
+    """ASK query with .txt output should fail with a clear error."""
+    out_file = tmp_path / "ask_result.txt"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(sample_data_ttl),
+            "-q",
+            str(ask_true_query),
+            "-o",
+            str(out_file),
+        ],
+    )
+    assert result.exit_code == 0
+    assert "ASK query result: True" in result.output
+    assert "Failed to serialize" in result.output
