@@ -101,7 +101,7 @@ def load_graphs(
                 assert_supported_format(file)
 
                 graphName = file.resolve().as_uri()
-                dataGraph = dataset.get_context(graphName)
+                dataGraph = dataset.graph(graphName)
                 dataGraph.parse(file, publicID="urn:uuid:")
 
             except Exception as error:
