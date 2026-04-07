@@ -533,11 +533,11 @@ class TestSerializeResults:
         with pytest.raises(ValueError, match="CONSTRUCT"):
             serialize_results(results, outfile)
 
-    def test_serialize_results_construct_none_graph(
-        self, tmp_path, sample_graph, sample_construct_query_file
-    ):
+    def test_serialize_results_construct_none_graph(self, tmp_path):
         """Serializing CONSTRUCT results with graph=None should raise ValueError."""
-        results = execute_query(sample_graph, sample_construct_query_file)
+        from rdflib.query import Result
+
+        results = Result("CONSTRUCT")
         results.graph = None
         outfile = tmp_path / "construct_results.ttl"
         with pytest.raises(ValueError, match="returned no graph to serialize"):
