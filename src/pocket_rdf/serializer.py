@@ -84,9 +84,17 @@ def serialize_graphs(
         is_dataset = isinstance(rdf_obj, Dataset)
         outFormat = detect_output_format(outfile, is_dataset)
         if outFormat is None:
+            fmt_map = (
+                SERIALIZER_FORMATS_NAMED_GRAPHS
+                if is_dataset
+                else SERIALIZER_FORMATS_DEFAULT_GRAPH
+            )
+            supported = ", ".join(sorted(fmt_map.keys()))
+            mode_label = "named graphs" if is_dataset else "default graph"
             raise ValueError(
                 f"Unsupported serialization format for file: {outfile} "
-                f"for {'named graphs' if is_dataset else 'default graph'} mode."
+                f"for {mode_label} mode. "
+                f"Supported extensions: {supported}"
             )
 
         outfile.parent.mkdir(parents=True, exist_ok=True)
