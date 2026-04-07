@@ -32,7 +32,7 @@ def query(
 
     loaded_graphs = load_graphs(datafiles, use_dataset)
     for failed_file, error in loaded_graphs[1]:
-        typer.echo(f"Failed to load {failed_file}: {error}")
+        typer.secho(f"Failed to load {failed_file}: {error}", fg=typer.colors.RED)
 
     graphs = loaded_graphs[0]
 
@@ -40,15 +40,18 @@ def query(
     try:
         results = execute_query(graphs, queryfile)
     except Exception as error:
-        typer.echo(f"Failed to execute query: {error}")
+        typer.secho(f"Failed to execute query: {error}", fg=typer.colors.RED)
         return
 
     if not results:
-        typer.echo("Query executed successfully but returned no results.")
+        typer.secho(
+            "Query executed successfully but returned no results.",
+            fg=typer.colors.YELLOW,
+        )
         return
 
     try:
         serialize_results(results, outfile)
-        typer.echo(f"Query results serialized to: {outfile}")
+        typer.secho(f"Query results serialized to: {outfile}", fg=typer.colors.GREEN)
     except Exception as error:
-        typer.echo(f"Failed to serialize query results: {error}")
+        typer.secho(f"Failed to serialize query results: {error}", fg=typer.colors.RED)

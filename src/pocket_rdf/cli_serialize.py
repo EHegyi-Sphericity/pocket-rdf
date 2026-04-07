@@ -30,12 +30,12 @@ def serialize(
 
     loaded_graphs = load_graphs(datafiles, use_dataset)
     for failed_file, error in loaded_graphs[1]:
-        typer.echo(f"Failed to load {failed_file}: {error}")
+        typer.secho(f"Failed to load {failed_file}: {error}", fg=typer.colors.RED)
 
     graphs = loaded_graphs[0]
 
     try:
         serialize_graphs(graphs, outfile)
-        typer.echo(f"RDF graph serialized to: {outfile}")
+        typer.secho(f"RDF graph serialized to: {outfile}", fg=typer.colors.GREEN)
     except Exception as error:
-        typer.echo(f"Failed to serialize RDF graph: {error}")
+        typer.secho(f"Failed to serialize RDF graph: {error}", fg=typer.colors.RED)
