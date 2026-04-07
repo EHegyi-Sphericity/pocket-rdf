@@ -43,6 +43,14 @@ SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE = {
     ".trig": "trig",
 }
 
+# Maps each SPARQL result type to its supported serialization formats
+SERIALIZER_FORMATS_BY_RESULT_TYPE = {
+    "SELECT": SERIALIZER_FORMATS_SELECT,
+    "ASK": SERIALIZER_FORMATS_ASK,
+    "CONSTRUCT": SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE,
+    "DESCRIBE": SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE,
+}
+
 
 def detect_output_format(filepath: Path, result_type: str = "SELECT") -> Optional[str]:
     """
@@ -61,13 +69,9 @@ def detect_output_format(filepath: Path, result_type: str = "SELECT") -> Optiona
     Optional[str]
         rdflib-compatible format string, or None if unsupported.
     """
-    format_map = {
-        "SELECT": SERIALIZER_FORMATS_SELECT,
-        "ASK": SERIALIZER_FORMATS_ASK,
-        "CONSTRUCT": SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE,
-        "DESCRIBE": SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE,
-    }
-    return format_map.get(result_type, {}).get(filepath.suffix.lower())
+    return SERIALIZER_FORMATS_BY_RESULT_TYPE.get(result_type, {}).get(
+        filepath.suffix.lower()
+    )
 
 
 def execute_query(
@@ -118,9 +122,13 @@ def serialize_results(results: Result, outfile: Path):
         is_graph_result = result_type in ("CONSTRUCT", "DESCRIBE")
         outformat = detect_output_format(outfile, result_type)
         if outformat is None:
+            supported = ", ".join(
+                sorted(SERIALIZER_FORMATS_BY_RESULT_TYPE.get(result_type, {}).keys())
+            )
             raise ValueError(
                 f"Unsupported serialization format for file: {outfile} "
-                f"for {result_type} results."
+                f"for {result_type} results. "
+                f"Supported extensions: {supported}"
             )
 
         outfile.parent.mkdir(parents=True, exist_ok=True)

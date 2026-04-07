@@ -101,7 +101,11 @@ def serialize_report(report_graph: Graph, outfile: Path) -> None:
     try:
         outformat = detect_output_format(outfile)
         if outformat is None:
-            raise ValueError(f"Unsupported serialization format for file: {outfile}")
+            supported = ", ".join(sorted(SERIALIZER_FORMATS.keys()))
+            raise ValueError(
+                f"Unsupported serialization format for file: {outfile}. "
+                f"Supported extensions: {supported}"
+            )
 
         outfile.parent.mkdir(parents=True, exist_ok=True)
         with outfile.open("wb") as outputFile:
