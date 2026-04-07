@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 from typer.testing import CliRunner
@@ -307,3 +308,30 @@ def test_validate_not_conforms_result(
     assert result.exit_code == 0
     # Should contain one of these results
     assert "Validation failed" in result.output
+
+
+def test_validate_not_conforms_with_non_graph_report(
+    runner, sample_non_conform_data_ttl, sample_shapes_ttl, tmp_path
+):
+    """When report_graph is not a Graph, print failure without violation count."""
+    out_file = tmp_path / "report.ttl"
+    fake_report = {"conforms": False, "report_graph": "not a graph"}
+    with patch("pocket_rdf.cli_validate.execute_validation", return_value=fake_report):
+        result = runner.invoke(
+            app,
+            [
+                "validate",
+                str(sample_non_conform_data_ttl),
+                "--shapes",
+                str(sample_shapes_ttl),
+                "--out",
+                str(out_file),
+            ],
+        )
+    assert result.exit_code == 0
+    assert "Validation failed" in result.output
+    assert "violation(s) found" not in result.output
+    assert "Cannot serialize" in result.output
+    assert re.search(
+        r"\b\d+(?:\.\d+)?s\b", result.output
+    ), "Timing information should still be displayed when report serialization fails"

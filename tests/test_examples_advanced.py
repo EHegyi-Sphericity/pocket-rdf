@@ -84,7 +84,7 @@ def test_query_cross_graph_no_results(tmp_path):
         ],
     )
     assert result.exit_code == 0, result.output
-    assert "no results" in result.output.lower()
+    assert "0 result(s)" in result.output
 
 
 # ── Validate ─────────────────────────────────────────────────────────────────
