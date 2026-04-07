@@ -332,3 +332,6 @@ def test_validate_not_conforms_with_non_graph_report(
     assert "Validation failed" in result.output
     assert "violation(s) found" not in result.output
     assert "Cannot serialize" in result.output
+    assert re.search(
+        r"\b\d+(?:\.\d+)?s\b", result.output
+    ), "Timing information should still be displayed when report serialization fails"
