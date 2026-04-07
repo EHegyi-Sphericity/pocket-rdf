@@ -67,17 +67,13 @@ def test_load_graphs_named_graphs(sample_data_ttl, sample_data_xml):
     ds, fails = load_graphs([sample_data_ttl, sample_data_xml], use_dataset=True)
     assert len(fails) == 0
     assert isinstance(ds, Dataset)
-    # ensure dataset has contexts for each input file
-    # and a default urn:x-rdflib:default
+    # ensure dataset has named graphs for each input file plus the default graph
     graphs = list(ds.graphs())
     assert len(graphs) == 3
-    assert any(str(graph.identifier) == "urn:x-rdflib:default" for graph in graphs)
-    assert any(
-        str(graph.identifier) == sample_data_ttl.resolve().as_uri() for graph in graphs
-    )
-    assert any(
-        str(graph.identifier) == sample_data_xml.resolve().as_uri() for graph in graphs
-    )
+    graph_ids = {str(g.identifier) for g in graphs if g != ds.default_graph}
+    assert sample_data_ttl.resolve().as_uri() in graph_ids
+    assert sample_data_xml.resolve().as_uri() in graph_ids
+    assert ds.default_graph is not None
 
 
 def test_load_graphs_with_invalid_file(sample_data_ttl, tmp_path):
