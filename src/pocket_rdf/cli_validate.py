@@ -37,7 +37,7 @@ def validate(
 
     loaded_graphs = load_graphs(datafiles, use_dataset)
     for failed_file, error in loaded_graphs[1]:
-        typer.echo(f"Failed to load {failed_file}: {error}")
+        typer.secho(f"Failed to load {failed_file}: {error}", fg=typer.colors.RED)
 
     graphs = loaded_graphs[0]
 
@@ -45,24 +45,40 @@ def validate(
     try:
         validation_report = execute_validation(graphs, shapesfile)
     except Exception as error:
-        typer.echo(f"Failed to perform SHACL validation: {error}")
+        typer.secho(f"Failed to perform SHACL validation: {error}", fg=typer.colors.RED)
         return
 
     if not validation_report:
-        typer.echo("Validation executed but no report was generated.")
+        typer.secho(
+            "Validation executed but no report was generated.",
+            fg=typer.colors.YELLOW,
+        )
         return
 
     if validation_report["conforms"]:
-        typer.echo("Validation successful: Data conforms to SHACL shapes.")
+        typer.secho(
+            "Validation successful: Data conforms to SHACL shapes.",
+            fg=typer.colors.GREEN,
+        )
     else:
-        typer.echo("Validation failed: Data does not conform to SHACL shapes.")
+        typer.secho(
+            "Validation failed: Data does not conform to SHACL shapes.",
+            fg=typer.colors.RED,
+        )
 
     if not isinstance(validation_report["report_graph"], Graph):
-        typer.echo("Validation report is not a valid RDF graph. Cannot serialize.")
+        typer.secho(
+            "Validation report is not a valid RDF graph. Cannot serialize.",
+            fg=typer.colors.RED,
+        )
         return
 
     try:
         serialize_report(validation_report["report_graph"], outfile)
-        typer.echo(f"Validation report serialized to: {outfile}")
+        typer.secho(
+            f"Validation report serialized to: {outfile}", fg=typer.colors.GREEN
+        )
     except Exception as error:
-        typer.echo(f"Failed to serialize validation report: {error}")
+        typer.secho(
+            f"Failed to serialize validation report: {error}", fg=typer.colors.RED
+        )
