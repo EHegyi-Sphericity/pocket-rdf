@@ -226,10 +226,16 @@ class TestDetectOutputFormat:
 
     def test_detect_format_describe_same_as_construct(self):
         for ext, expected in SERIALIZER_FORMATS_CONSTRUCT_DESCRIBE.items():
-            assert (
-                detect_output_format(Path(f"results{ext}"), result_type="DESCRIBE")
-                == expected
+            construct_format = detect_output_format(
+                Path(f"results{ext}"), result_type="CONSTRUCT"
             )
+            describe_format = detect_output_format(
+                Path(f"results{ext}"), result_type="DESCRIBE"
+            )
+
+            assert construct_format == expected
+            assert describe_format == expected
+            assert describe_format == construct_format
 
 
 class TestExecuteQuery:
