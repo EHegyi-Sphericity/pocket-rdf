@@ -1,0 +1,10 @@
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix ex: <http://example.org/> .
+
+ex:WarningShape a sh:NodeShape ;
+    sh:targetClass ex:Class ;
+    sh:severity sh:Warning ;
+    sh:property [
+        sh:path ex:recommendedProp ;
+        sh:minCount 1 ;
+    ] .

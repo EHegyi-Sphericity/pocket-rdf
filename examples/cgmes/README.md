@@ -228,3 +228,85 @@ pocket-rdf validate models/*.xml \
 
 > **Tip:** For full dataset validation, run the command once per profile shape
 > to get targeted reports, or combine all shapes into a single file.
+
+When a profile references entities defined in another profile (e.g., Equipment
+references Equipment Boundary definitions), use `--context` to load the
+referenced profile for reference resolution without validating it:
+
+```bash
+pocket-rdf validate models/*BC_EQ*.xml \
+  --dataset \
+  --shapes adapted_cgmes_2_4_15_shacl/EquipmentProfile.ttl \
+  --out output/eq_validation_report.ttl \
+  --context models/*EQ_BD*.xml
+```
+
+> **Note:** Files passed via `--context` are loaded into the dataset so that
+> cross-profile references can be resolved, but only the files listed as
+> positional arguments are validated against the SHACL shapes.
+
+### Known limitation: `--context` and shared subjects
+
+In CGMES, certain resource URIs (e.g., `ConnectivityNode`, `Terminal`) appear
+in multiple profiles. When context files are loaded alongside the data files,
+all triples for a shared subject are merged into the same dataset. SHACL
+validation then sees properties from both the target profile and the context
+profile for that subject.
+
+This means that **closed-shape constraints** (`sh:closed true`) in the target
+profile's shapes may flag properties that legitimately belong to the context
+profile as violations. For example, when validating a Topology (TP) file with
+Equipment (EQ) as context, the TP shapes may report EQ-specific properties
+like `ConnectivityNode.ConnectivityNodeContainer` as "not part of the profile",
+even though those properties only exist in the EQ file.
+
+This is a fundamental consequence of how SHACL operates on a merged RDF graph
+— it has no concept of which file a triple originated from.
+
+If the closed-shape constraints use `sh:severity sh:Info` (or `sh:Warning`),
+you can suppress these false violations with the `--allow-infos` (or
+`--allow-warnings`) flag:
+
+```bash
+pocket-rdf validate models/*BC_TP*.xml \
+  --dataset \
+  --shapes adapted_cgmes_2_4_15_shacl/TopologyProfile.ttl \
+  --out output/tp_validation_report.ttl \
+  --context models/*BC_EQ*.xml \
+  --allow-infos
+```
+
+### Best practice: split shapes by concern
+
+To work around this limitation, consider splitting your SHACL shapes into two
+categories:
+
+1. **Reference-checking shapes** — validate that cross-profile references
+   resolve correctly (e.g., `sh:class`, `sh:nodeKind`, cardinality
+   constraints). These shapes benefit from `--context` because additional
+   profiles provide the referenced instances.
+
+2. **Closed-property shapes** — validate that a resource only contains
+   properties allowed by its profile (`sh:closed true`, allowed-properties
+   constraints). These shapes should be run **without** `--context`, because
+   context files introduce properties from other profiles that trigger false
+   violations.
+
+By running these two shape categories in separate validation passes, you get
+accurate results for both cross-profile reference resolution and
+profile-specific property constraints:
+
+```bash
+# Pass 1: Check cross-profile references (with context)
+pocket-rdf validate models/*BC_TP*.xml \
+  --dataset \
+  --shapes shapes/tp_reference_shapes.ttl \
+  --out output/tp_references_report.ttl \
+  --context models/*BC_EQ*.xml
+
+# Pass 2: Check allowed properties (without context)
+pocket-rdf validate models/*BC_TP*.xml \
+  --dataset \
+  --shapes shapes/tp_closed_shapes.ttl \
+  --out output/tp_properties_report.ttl
+```

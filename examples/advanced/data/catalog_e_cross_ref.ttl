@@ -1,0 +1,25 @@
+@prefix ex:   <http://example.org/library/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Catalog E: Books that reference authors defined in other catalogs.
+# Tolkien is defined in catalog_a.ttl and Asimov in catalog_b.ttl.
+# Without loading those catalogs as context, the sh:class ex:Author
+# constraint cannot be satisfied because the Author instances are missing.
+
+ex:genre-anthology   a  ex:Genre ;
+    ex:label           "Anthology" .
+
+ex:book-silmarillion   a  ex:Book ;
+    ex:title             "The Silmarillion" ;
+    ex:author            ex:author-tolkien ;
+    ex:genre             ex:genre-fantasy ;
+    ex:published         1977 ;
+    ex:pages             365 .
+
+ex:book-robots         a  ex:Book ;
+    ex:title             "I, Robot" ;
+    ex:author            ex:author-asimov ;
+    ex:genre             ex:genre-scifi ;
+    ex:published         1950 ;
+    ex:pages             253 .

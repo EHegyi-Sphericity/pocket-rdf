@@ -92,6 +92,16 @@ Options:
 - `--shapes`, `-s`: SHACL shapes file
 - `--out`, `-o`: Output file for validation report
 - `--dataset`, `-d`: Load each input file into its own named graph
+- `--context`, `-c`: Additional RDF files loaded for reference resolution only (not validated)
+- `--allow-infos`: Treat `sh:Info` severity results as non-failing
+- `--allow-warnings`: Treat `sh:Warning` and `sh:Info` severity results as non-failing
+
+When a file references entities defined in another file, use `--context` to load
+the referenced file for reference resolution without validating it:
+
+```bash
+pocket-rdf validate EQ.xml --shapes shapes.ttl --out report.ttl --context EQBD.xml
+```
 
 ## Examples
 
