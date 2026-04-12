@@ -75,7 +75,7 @@ def detect_output_format(filepath: Path, result_type: str = "SELECT") -> Optiona
 
 
 def execute_query(
-    rdf_obj: Union[Graph, Dataset],
+    data_graph: Union[Graph, Dataset],
     queryfile: Path,
 ) -> Result:
     """
@@ -83,7 +83,7 @@ def execute_query(
 
     Parameters
     ----------
-    rdf_obj : Union[Graph, Dataset]
+    data_graph : Union[Graph, Dataset]
         RDFLib graph or dataset to query.
 
     queryfile : Path
@@ -96,7 +96,7 @@ def execute_query(
     """
     try:
         query = queryfile.read_text()
-        return rdf_obj.query(query)
+        return data_graph.query(query)
     except Exception as error:
         raise ValueError(f"Failed to load SPARQL query from {queryfile}: {error}")
 
