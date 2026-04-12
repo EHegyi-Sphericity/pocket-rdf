@@ -1,0 +1,15 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix ex:   <http://example.org/library/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Info-severity shape: recommends that every Book has a page count.
+# This is an informational hint, not a hard requirement.
+
+ex:BookPagesInfoShape  a  sh:NodeShape ;
+    sh:targetClass  ex:Book ;
+    sh:severity     sh:Info ;
+    sh:property [
+        sh:path      ex:pages ;
+        sh:minCount  1 ;
+        sh:message   "Info: A Book should have a page count." ;
+    ] .

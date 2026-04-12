@@ -1,0 +1,18 @@
+@prefix ex:   <http://example.org/library/> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Catalog F: A book missing soft/informational fields (pages, published year).
+# Used to demonstrate --allow-infos and --allow-warnings.
+
+ex:author-orwell   a  ex:Author ;
+    ex:name        "George Orwell" ;
+    ex:birthYear   1903 .
+
+ex:genre-dystopia  a  ex:Genre ;
+    ex:label       "Dystopia" .
+
+ex:book-1984       a  ex:Book ;
+    ex:title       "1984" ;
+    ex:author      ex:author-orwell ;
+    ex:genre       ex:genre-dystopia .

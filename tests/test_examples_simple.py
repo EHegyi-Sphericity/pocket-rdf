@@ -135,6 +135,7 @@ def test_validate_pass(tmp_path):
     )
     assert result.exit_code == 0, result.output
     assert "Validation successful" in result.output
+    assert "conforms" in result.output
     assert out.exists()
 
 
@@ -153,5 +154,6 @@ def test_validate_fail(tmp_path):
         ],
     )
     assert result.exit_code == 0, result.output
-    assert "Validation failed" in result.output
+    assert "Validation successful" in result.output
+    assert "does not conform" in result.output
     assert out.exists()

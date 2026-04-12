@@ -1,0 +1,15 @@
+@prefix sh:   <http://www.w3.org/ns/shacl#> .
+@prefix ex:   <http://example.org/library/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+# Warning-severity shape: warns if a Book is missing the published year.
+# This is a soft constraint — the data is still usable without it.
+
+ex:BookPublishedWarningShape  a  sh:NodeShape ;
+    sh:targetClass  ex:Book ;
+    sh:severity     sh:Warning ;
+    sh:property [
+        sh:path      ex:published ;
+        sh:minCount  1 ;
+        sh:message   "Warning: A Book should have a publication year." ;
+    ] .

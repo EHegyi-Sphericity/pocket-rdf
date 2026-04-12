@@ -128,7 +128,7 @@ pocket-rdf query data/library.ttl \
 
 Validate data against the SHACL shapes.
 
-### Valid data — should pass
+### Valid data — should conform
 
 ```bash
 pocket-rdf validate data/library.ttl \
@@ -142,7 +142,7 @@ Expected output:
 Validation successful: Data conforms to SHACL shapes.
 ```
 
-### Invalid data — should fail
+### Invalid data — should not conform
 
 ```bash
 pocket-rdf validate data/library.ttl data/library_invalid.ttl \
@@ -153,7 +153,7 @@ pocket-rdf validate data/library.ttl data/library_invalid.ttl \
 Expected output:
 
 ```
-Validation failed: Data does not conform to SHACL shapes.
+Validation successful: Data does not conform to SHACL shapes.
 ```
 
 The validation report in `output/validation_fail.ttl` will detail which nodes

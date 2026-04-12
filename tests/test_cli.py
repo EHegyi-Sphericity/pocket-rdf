@@ -54,6 +54,7 @@ def test_validate_success(runner, sample_data_ttl, sample_shapes_ttl, tmp_path):
     )
     assert result.exit_code == 0
     assert "Validation successful" in result.output
+    assert "conforms" in result.output
     assert out_file.exists()
 
 
@@ -82,7 +83,8 @@ ex:Shape a sh:NodeShape ;
         ],
     )
     assert result.exit_code == 0  # CLI doesn't exit on validation failure
-    assert "Validation failed" in result.output
+    assert "Validation successful" in result.output
+    assert "does not conform" in result.output
 
 
 def test_validate_missing_file(runner, tmp_path):
@@ -146,7 +148,13 @@ def test_serialize_success(runner, sample_data_ttl, tmp_path):
     """Test successful RDF serialization."""
     out_file = tmp_path / "output.xml"
     result = runner.invoke(
-        app, ["serialize", str(sample_data_ttl), "--out", str(out_file)]
+        app,
+        [
+            "serialize",
+            str(sample_data_ttl),
+            "--out",
+            str(out_file),
+        ],
     )
     assert result.exit_code == 0
     assert "RDF graph serialized" in result.output
@@ -157,7 +165,13 @@ def test_serialize_missing_file(runner, tmp_path):
     """Test serialization with missing input file."""
     out_file = tmp_path / "output.xml"
     result = runner.invoke(
-        app, ["serialize", "nonexistent.ttl", "--out", str(out_file)]
+        app,
+        [
+            "serialize",
+            "nonexistent.ttl",
+            "--out",
+            str(out_file),
+        ],
     )
     assert result.exit_code == 0
     assert "Failed to load" in result.output
@@ -191,7 +205,9 @@ ex:Shape a sh:NodeShape ;
     out_file = tmp_path / "report.ttl"
 
     monkeypatch.setattr(
-        cli_validate, "execute_validation", lambda graphs, shapesfile: {}
+        cli_validate,
+        "execute_validation",
+        lambda data_g, shapes_g, context_g, allow_infos, allow_warnings: {},
     )
 
     result = runner.invoke(
@@ -231,7 +247,10 @@ ex:Shape a sh:NodeShape ;
     monkeypatch.setattr(
         cli_validate,
         "execute_validation",
-        lambda graphs, shapesfile: {"conforms": True, "report_graph": "not-graph"},
+        lambda data_graphs, shapes_graph, context_graph, allow_infos, allow_warnings: {
+            "conforms": True,
+            "report_graph": "not-graph",
+        },
     )
 
     result = runner.invoke(
@@ -248,7 +267,8 @@ ex:Shape a sh:NodeShape ;
 
     assert result.exit_code == 0
     assert (
-        "Validation report is not a valid RDF graph. Cannot serialize." in result.output
+        "Validation report is missing expected keys or has invalid types."
+        in result.output
     )
     assert not out_file.exists()
 

@@ -92,18 +92,28 @@ Options:
 - `--shapes`, `-s`: SHACL shapes file
 - `--out`, `-o`: Output file for validation report
 - `--dataset`, `-d`: Load each input file into its own named graph
+- `--context`, `-c`: Additional RDF files loaded for reference resolution only (not validated)
+- `--allow-infos`: Treat `sh:Info` severity results as non-failing
+- `--allow-warnings`: Treat `sh:Warning` and `sh:Info` severity results as non-failing
+
+When a file references entities defined in another file, use `--context` to load
+the referenced file for reference resolution without validating it:
+
+```bash
+pocket-rdf validate EQ.xml --shapes shapes.ttl --out report.ttl --context EQBD.xml
+```
 
 ## Examples
 
-The [`examples/`](examples/) directory contains three progressive sets of
+The [`examples/`](https://github.com/EHegyi-Sphericity/pocket-rdf/tree/main/examples) directory contains three progressive sets of
 working examples, each with its own README, sample data, SPARQL queries, and
 SHACL shapes:
 
 | Directory | Scope | Key concepts |
 |-----------|-------|--------------|
-| [`examples/simple/`](examples/simple/) | Single graph | Load, serialize, query, and validate a small library dataset |
-| [`examples/advanced/`](examples/advanced/) | Named graphs (`--dataset`) | Multiple catalogs, `GRAPH` queries, TriG/N-Quads, SPARQL-based SHACL |
-| [`examples/cgmes/`](examples/cgmes/) | CGMES power system data | Multi-profile datasets, ENTSO-E SHACL shapes, RDFS-enhanced querying |
+| [`examples/simple/`](https://github.com/EHegyi-Sphericity/pocket-rdf/tree/main/examples/simple) | Single graph | Load, serialize, query, and validate a small library dataset |
+| [`examples/advanced/`](https://github.com/EHegyi-Sphericity/pocket-rdf/tree/main/examples/advanced) | Named graphs (`--dataset`) | Multiple catalogs, `GRAPH` queries, TriG/N-Quads, SPARQL-based SHACL |
+| [`examples/cgmes/`](https://github.com/EHegyi-Sphericity/pocket-rdf/tree/main/examples/cgmes) | CGMES power system data | Multi-profile datasets, ENTSO-E SHACL shapes, RDFS-enhanced querying |
 
 ## Development
 
