@@ -105,15 +105,15 @@ pocket-rdf validate EQ.xml --shapes shapes.ttl --out report.ttl --context EQBD.x
 
 ## Examples
 
-The [`examples/`](examples/) directory contains three progressive sets of
+The [`examples/`](https://github.com/EHegyi-Sphericity/pocket-rdf/tree/main/examples) directory contains three progressive sets of
 working examples, each with its own README, sample data, SPARQL queries, and
 SHACL shapes:
 
 | Directory | Scope | Key concepts |
 |-----------|-------|--------------|
-| [`examples/simple/`](examples/simple/) | Single graph | Load, serialize, query, and validate a small library dataset |
-| [`examples/advanced/`](examples/advanced/) | Named graphs (`--dataset`) | Multiple catalogs, `GRAPH` queries, TriG/N-Quads, SPARQL-based SHACL |
-| [`examples/cgmes/`](examples/cgmes/) | CGMES power system data | Multi-profile datasets, ENTSO-E SHACL shapes, RDFS-enhanced querying |
+| [`examples/simple/`](https://github.com/EHegyi-Sphericity/pocket-rdf/tree/main/examples/simple) | Single graph | Load, serialize, query, and validate a small library dataset |
+| [`examples/advanced/`](https://github.com/EHegyi-Sphericity/pocket-rdf/tree/main/examples/advanced) | Named graphs (`--dataset`) | Multiple catalogs, `GRAPH` queries, TriG/N-Quads, SPARQL-based SHACL |
+| [`examples/cgmes/`](https://github.com/EHegyi-Sphericity/pocket-rdf/tree/main/examples/cgmes) | CGMES power system data | Multi-profile datasets, ENTSO-E SHACL shapes, RDFS-enhanced querying |
 
 ## Development
 
