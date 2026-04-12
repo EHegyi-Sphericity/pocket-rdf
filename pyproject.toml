@@ -1,6 +1,6 @@
 [project]
 name = "pocket-rdf"
-version = "0.2.0"
+version = "0.3.0"
 description = "A lightweight RDF toolkit for Python"
 readme = "README.md"
 requires-python = ">=3.10"

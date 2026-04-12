@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] - 2026-04-12
+
+### Added
+
+- SHACL validation context support via `--context` / `-c` (multiple files) for cross-file reference resolution
+- Validation severity controls:
+	- `--allow-infos` to treat `sh:Info` as non-failing
+	- `--allow-warnings` to treat `sh:Warning` and `sh:Info` as non-failing
+- Plain-text SHACL validation report output (`.txt`) in addition to RDF serialization formats
+- Advanced examples for cross-catalog references and severity-level validation behavior (`sh:Info`, `sh:Warning`)
+- Expanded CGMES and advanced documentation for context-driven validation workflows
+
+### Fixed
+
+- Context-assisted validation now keeps focus on nodes from target input data, reducing false violations from context-only entities
+- Documentation links and example references updated
+
+### Changed
+
+- Improved CLI output messages and progress reporting in `query`, `serialize`, and `validate` commands
+- Expanded integration and CLI tests for context validation, severity flags, and example workflows
+
 ## [0.2.0] - 2026-04-07
 
 ### Added
