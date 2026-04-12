@@ -28,42 +28,61 @@ def query(
     Load an RDF file, execute a SPARQL query, and serialize the results.
     """
     datafiles_str = ", ".join(str(f) for f in datafiles)
-    typer.echo(f"Loading RDF data from: {datafiles_str}")
-    typer.echo(f"...into {'a dataset' if use_dataset else 'a single graph'}")
+    typer.echo(
+        f"\nLoading RDF files into a "
+        f"{'dataset' if use_dataset else 'single graph'}: {datafiles_str}"
+    )
 
     t0 = time.perf_counter()
     loaded_graphs = load_graphs(datafiles, use_dataset)
     load_time = time.perf_counter() - t0
+
+    data_graph = loaded_graphs[0]
+
+    typer.secho(
+        f"Loaded {len(data_graph)} triples in {load_time:.3f}s.", fg=typer.colors.BLACK
+    )
+
     for failed_file, error in loaded_graphs[1]:
         typer.secho(f"Failed to load {failed_file}: {error}", fg=typer.colors.RED)
 
-    graphs = loaded_graphs[0]
-    typer.echo(f"Loaded {len(graphs)} triples in {load_time:.3f}s.")
+    typer.echo(f"\nExecuting SPARQL query from: {queryfile}")
 
-    typer.echo(f"Executing SPARQL query from: {queryfile}")
-    t0 = time.perf_counter()
     try:
-        results = execute_query(graphs, queryfile)
+        t0 = time.perf_counter()
+        results = execute_query(data_graph, queryfile)
+        query_time = time.perf_counter() - t0
+
+        typer.secho(f"Query executed in {query_time:.3f}s.", fg=typer.colors.BLACK)
     except Exception as error:
         typer.secho(f"Failed to execute query: {error}", fg=typer.colors.RED)
         return
-    query_time = time.perf_counter() - t0
-    typer.echo(f"Query executed in {query_time:.3f}s.")
 
     if results.type == "ASK":
         answer = bool(results)
         color = typer.colors.GREEN if answer else typer.colors.YELLOW
-        typer.secho(f"ASK query result: {answer}", fg=color)
+        typer.secho(f"\nASK query result: {answer}", fg=color)
     elif results.type == "SELECT":
-        typer.echo(f"SELECT query returned {len(results.bindings)} result(s).")
+        typer.secho(
+            f"\nSELECT query returned {len(results.bindings)} result(s).",
+            fg=typer.colors.GREEN,
+        )
     elif results.type in ("CONSTRUCT", "DESCRIBE") and results.graph is not None:
-        typer.echo(f"{results.type} query returned {len(results.graph)} triple(s).")
+        typer.secho(
+            f"\n{results.type} query returned {len(results.graph)} triple(s).",
+            fg=typer.colors.GREEN,
+        )
 
-    t0 = time.perf_counter()
     try:
+        t0 = time.perf_counter()
         serialize_results(results, outfile)
         ser_time = time.perf_counter() - t0
-        typer.secho(f"Query results serialized to: {outfile}", fg=typer.colors.GREEN)
-        typer.echo(f"Serialization completed in {ser_time:.3f}s.")
+
+        typer.echo(f"\nQuery results serialized to: {outfile}")
+        typer.secho(
+            f"Serialization completed in {ser_time:.3f}s.", fg=typer.colors.BLACK
+        )
     except Exception as error:
-        typer.secho(f"Failed to serialize query results: {error}", fg=typer.colors.RED)
+        typer.secho(
+            f"\nFailed to serialize query results: {error}", fg=typer.colors.RED
+        )
