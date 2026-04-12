@@ -1,5 +1,6 @@
 import re
 from pathlib import Path
+from unittest.mock import MagicMock, patch
 
 import pytest
 from typer.testing import CliRunner
@@ -325,3 +326,132 @@ def test_query_ask_txt_unsupported(runner, sample_data_ttl, ask_true_query, tmp_
     assert result.exit_code == 0
     assert "ASK query result: True" in result.output
     assert "Failed to serialize" in result.output
+
+
+@pytest.fixture
+def construct_query(tmp_path):
+    """Create a SPARQL CONSTRUCT query."""
+    query_file = tmp_path / "construct.sparql"
+    query_file.write_text(
+        "PREFIX ex: <http://example.org/>\n"
+        "CONSTRUCT { ?s ex:predicate ?o . }\n"
+        "WHERE { ?s ex:predicate ?o . }"
+    )
+    return query_file
+
+
+@pytest.fixture
+def describe_query(tmp_path):
+    """Create a SPARQL DESCRIBE query."""
+    query_file = tmp_path / "describe.sparql"
+    query_file.write_text("PREFIX ex: <http://example.org/>\n" "DESCRIBE ex:subject")
+    return query_file
+
+
+def test_query_construct(runner, sample_data_ttl, construct_query, tmp_path):
+    """CONSTRUCT query should report triple count and serialize to TTL."""
+    out_file = tmp_path / "construct_result.ttl"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(sample_data_ttl),
+            "-q",
+            str(construct_query),
+            "-o",
+            str(out_file),
+        ],
+    )
+    assert result.exit_code == 0
+    assert "CONSTRUCT query returned" in result.output
+    assert "triple(s)" in result.output
+    assert "Query results serialized" in result.output
+    assert out_file.exists()
+    content = out_file.read_text()
+    assert len(content.strip()) > 0
+
+
+def test_query_construct_to_json(runner, sample_data_ttl, construct_query, tmp_path):
+    """CONSTRUCT query serialized to JSON-LD."""
+    out_file = tmp_path / "construct_result.jsonld"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(sample_data_ttl),
+            "-q",
+            str(construct_query),
+            "-o",
+            str(out_file),
+        ],
+    )
+    assert result.exit_code == 0
+    assert "CONSTRUCT query returned" in result.output
+    assert out_file.exists()
+
+
+def test_query_describe(runner, sample_data_ttl, describe_query, tmp_path):
+    """DESCRIBE query should report triple count and serialize to TTL."""
+    out_file = tmp_path / "describe_result.ttl"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(sample_data_ttl),
+            "-q",
+            str(describe_query),
+            "-o",
+            str(out_file),
+        ],
+    )
+    assert result.exit_code == 0
+    assert "DESCRIBE query returned" in result.output
+    assert "triple(s)" in result.output
+    assert "Query results serialized" in result.output
+    assert out_file.exists()
+    content = out_file.read_text()
+    assert len(content.strip()) > 0
+
+
+def test_query_construct_unsupported_format(
+    runner, sample_data_ttl, construct_query, tmp_path
+):
+    """CONSTRUCT query with unsupported output format should fail."""
+    out_file = tmp_path / "construct_result.csv"
+    result = runner.invoke(
+        app,
+        [
+            "query",
+            str(sample_data_ttl),
+            "-q",
+            str(construct_query),
+            "-o",
+            str(out_file),
+        ],
+    )
+    assert result.exit_code == 0
+    assert "Failed to serialize" in result.output
+
+
+def test_query_construct_with_none_graph(
+    runner, sample_data_ttl, construct_query, tmp_path
+):
+    """CONSTRUCT result with graph=None should skip the triple count message."""
+    out_file = tmp_path / "construct_result.ttl"
+    mock_result = MagicMock()
+    mock_result.type = "CONSTRUCT"
+    mock_result.graph = None
+    with patch("pocket_rdf.cli_query.execute_query", return_value=mock_result):
+        result = runner.invoke(
+            app,
+            [
+                "query",
+                str(sample_data_ttl),
+                "-q",
+                str(construct_query),
+                "-o",
+                str(out_file),
+            ],
+        )
+    assert result.exit_code == 0
+    assert "CONSTRUCT query returned" not in result.output
