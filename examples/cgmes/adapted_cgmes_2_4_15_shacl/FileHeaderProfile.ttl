@@ -204,6 +204,7 @@ fh:Model.SupersededBy-inverseNodePresent
 fh:Model.description-datatype
         rdf:type        sh:PropertyShape;
         sh:datatype     xsd:string;
+        sh:maxLength    2000 ;
         sh:description  "This constraint validates the datatype of the property (attribute).";
         sh:group        fh:DatatypesGroup;
         sh:message      "The datatype is not literal or it violates the xsd datatype.";
